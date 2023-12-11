@@ -8,8 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +27,8 @@ public class PriceEntity {
 	@Column(columnDefinition = "int8", name = "id", nullable = false, updatable = false, unique = true)
 	private BigInteger id;
 
-	@ManyToOne
-	@JoinColumn(columnDefinition = "int8", name = "brand_id", nullable = false, updatable = false)
-	private BrandEntity brand;
+	@Column(columnDefinition = "int8", name = "brand_id", nullable = false, updatable = false)
+	private BigInteger idBrand;
 
 	@Column(columnDefinition = "timestamp", name = "start_date", nullable = false, updatable = true)
 	private LocalDateTime startDate;
@@ -39,13 +36,11 @@ public class PriceEntity {
 	@Column(columnDefinition = "timestamp", name = "end_date", nullable = false, updatable = true)
 	private LocalDateTime endDate;
 
-	@ManyToOne
-	@JoinColumn(columnDefinition = "int8", name = "fee_id", nullable = false, updatable = false)
-	private FeeEntity fee;
+	@Column(columnDefinition = "int8", name = "fee_id", nullable = false, updatable = false)
+	private BigInteger idFee;
 
-	@ManyToOne
-	@JoinColumn(columnDefinition = "int8", name = "product_id", nullable = false, updatable = false)
-	private ProductEntity product;
+	@Column(columnDefinition = "int8", name = "product_id", nullable = false, updatable = false)
+	private BigInteger idProduct;
 
 	@Column(columnDefinition = "int4", name = "priority", nullable = false, updatable = true)
 	private int priority;

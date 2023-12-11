@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.rsp.akkodis.api.prices.domain.Price;
+import com.rsp.akkodis.api.prices.ApiApplication;
 import com.rsp.akkodis.api.prices.domain.service.PriceInService;
 
 @SpringBootTest
@@ -36,10 +36,15 @@ class IntegrationTests {
 	}
 
 	@Test
+	void applicationContextTest() {
+		ApiApplication.main(new String[] {});
+	}
+
+	@Test
 	void givenDataBaseLoaded_IntegrationTest1() {
 		var ldt = LocalDateTime.of(2020, 6, 14, 10, 0, 0);
 
-		Price price = priceInService.obtainPrice(ldt, idProduct, idBrand);
+		var price = priceInService.obtainPrice(ldt, idProduct, idBrand);
 
 		assertEquals(LocalDateTime.of(2020, 6, 14, 0, 0, 0), price.startDate());
 		assertEquals(LocalDateTime.of(2020, 12, 31, 23, 59, 59), price.endDate());
@@ -54,7 +59,7 @@ class IntegrationTests {
 	void givenDataBaseLoaded_IntegrationTest2() {
 		var ldt = LocalDateTime.of(2020, 6, 14, 16, 0, 0);
 
-		Price price = priceInService.obtainPrice(ldt, idProduct, idBrand);
+		var price = priceInService.obtainPrice(ldt, idProduct, idBrand);
 
 		assertEquals(LocalDateTime.of(2020, 6, 14, 15, 0, 0), price.startDate());
 		assertEquals(LocalDateTime.of(2020, 6, 14, 18, 30, 0), price.endDate());
@@ -69,7 +74,7 @@ class IntegrationTests {
 	void givenDataBaseLoaded_IntegrationTest3() {
 		var ldt = LocalDateTime.of(2020, 6, 14, 21, 0, 0);
 
-		Price price = priceInService.obtainPrice(ldt, idProduct, idBrand);
+		var price = priceInService.obtainPrice(ldt, idProduct, idBrand);
 
 		assertEquals(LocalDateTime.of(2020, 6, 14, 0, 0, 0), price.startDate());
 		assertEquals(LocalDateTime.of(2020, 12, 31, 23, 59, 59), price.endDate());
@@ -84,7 +89,7 @@ class IntegrationTests {
 	void givenDataBaseLoaded_IntegrationTest4() {
 		var ldt = LocalDateTime.of(2020, 6, 15, 10, 0, 0);
 
-		Price price = priceInService.obtainPrice(ldt, idProduct, idBrand);
+		var price = priceInService.obtainPrice(ldt, idProduct, idBrand);
 
 		assertEquals(LocalDateTime.of(2020, 6, 15, 00, 0, 0), price.startDate());
 		assertEquals(LocalDateTime.of(2020, 6, 15, 11, 0, 0), price.endDate());
@@ -99,7 +104,7 @@ class IntegrationTests {
 	void givenDataBaseLoaded_IntegrationTest5() {
 		var ldt = LocalDateTime.of(2020, 6, 16, 21, 0, 0);
 
-		Price price = priceInService.obtainPrice(ldt, idProduct, idBrand);
+		var price = priceInService.obtainPrice(ldt, idProduct, idBrand);
 
 		assertEquals(LocalDateTime.of(2020, 6, 15, 16, 0, 0), price.startDate());
 		assertEquals(LocalDateTime.of(2020, 12, 31, 23, 59, 59), price.endDate());

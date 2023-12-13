@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.rsp.akkodis.api.prices.domain.Brand;
@@ -23,6 +24,7 @@ import com.rsp.akkodis.api.prices.infrastructure.repository.SpringDatah2BrandRep
 import com.rsp.akkodis.api.prices.infrastructure.repository.SpringDatah2PriceRepository;
 import com.rsp.akkodis.api.prices.infrastructure.repository.SpringDatah2ProductRepository;
 
+@SpringBootTest
 class PriceInServiceTest {
 
 	@Autowired

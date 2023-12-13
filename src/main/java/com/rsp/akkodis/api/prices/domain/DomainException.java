@@ -1,4 +1,4 @@
-package com.rsp.akkodis.api.prices.domain.error;
+package com.rsp.akkodis.api.prices.domain;
 
 public class DomainException extends RuntimeException {
 	/**

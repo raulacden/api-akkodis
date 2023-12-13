@@ -1,4 +1,4 @@
-package com.rsp.akkodis.api.prices.application.rest.dto;
+package com.rsp.akkodis.api.prices.application.dto;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

@@ -19,13 +19,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.rsp.akkodis.api.prices.application.rest.PriceController;
+import com.rsp.akkodis.api.prices.application.PriceController;
 import com.rsp.akkodis.api.prices.domain.Brand;
+import com.rsp.akkodis.api.prices.domain.DomainException;
 import com.rsp.akkodis.api.prices.domain.Fee;
 import com.rsp.akkodis.api.prices.domain.Price;
 import com.rsp.akkodis.api.prices.domain.Product;
-import com.rsp.akkodis.api.prices.domain.error.DomainException;
-import com.rsp.akkodis.api.prices.domain.service.PriceInService;
+import com.rsp.akkodis.api.prices.domain.service.PriceService;
 
 @WebMvcTest(PriceController.class)
 class PriceControllerTest {
@@ -34,7 +34,7 @@ class PriceControllerTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private PriceInService priceInService;
+	private PriceService priceInService;
 
 	@Test
 	void obtainPriceByDateAndProductAndBrandEndpoint() throws Exception {

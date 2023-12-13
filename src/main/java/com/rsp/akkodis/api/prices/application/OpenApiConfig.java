@@ -1,4 +1,4 @@
-package com.rsp.akkodis.api.prices.application.rest;
+package com.rsp.akkodis.api.prices.application;
 
 import java.util.List;
 

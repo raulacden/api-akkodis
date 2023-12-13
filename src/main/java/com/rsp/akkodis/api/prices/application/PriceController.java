@@ -1,4 +1,4 @@
-package com.rsp.akkodis.api.prices.application.rest;
+package com.rsp.akkodis.api.prices.application;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.rsp.akkodis.api.prices.application.rest.dto.GetPriceResponse;
-import com.rsp.akkodis.api.prices.domain.ports.in.PriceInPort;
+import com.rsp.akkodis.api.prices.application.dto.GetPriceResponse;
+import com.rsp.akkodis.api.prices.domain.service.PriceService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,7 +32,7 @@ import jakarta.validation.constraints.Min;
 public class PriceController {
 
 	@Autowired
-	private PriceInPort priceInPort;
+	PriceService priceInService;
 
 	@Operation(summary = "Get price")
 	@ApiResponse(responseCode = "200", content = {
@@ -46,9 +46,11 @@ public class PriceController {
 			@Valid @Min(value = 1) @RequestParam BigInteger idBrand) {
 
 		try {
-			var response = RestMapper.INSTANCE.fromDomain(priceInPort.obtainPrice(date, idProduct, idBrand));
+			var response = priceInService.obtainPrice(date, idProduct, idBrand);
 
-			return ResponseEntity.ok(response);
+			return ResponseEntity
+					.ok(new GetPriceResponse(response.getId(), response.getBrand().getId(), response.getFee().getId(),
+							response.getStartDate(), response.getEndDate(), response.getAmount(), response.getCurr()));
 		} catch (RuntimeException exc) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exc.getMessage(), exc);
 		}

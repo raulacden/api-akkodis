@@ -2,7 +2,6 @@ package com.rsp.akkodis.api.prices.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -10,58 +9,58 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.rsp.akkodis.api.prices.domain.Brand;
+import com.rsp.akkodis.api.prices.domain.DomainException;
 import com.rsp.akkodis.api.prices.domain.Fee;
 import com.rsp.akkodis.api.prices.domain.Price;
 import com.rsp.akkodis.api.prices.domain.Product;
-import com.rsp.akkodis.api.prices.domain.error.DomainException;
-import com.rsp.akkodis.api.prices.domain.ports.out.BrandOutPort;
-import com.rsp.akkodis.api.prices.domain.ports.out.PriceOutPort;
-import com.rsp.akkodis.api.prices.domain.ports.out.ProductOutPort;
-import com.rsp.akkodis.api.prices.domain.service.PriceInService;
+import com.rsp.akkodis.api.prices.domain.service.PriceService;
+import com.rsp.akkodis.api.prices.infrastructure.repository.SpringDatah2BrandRepository;
+import com.rsp.akkodis.api.prices.infrastructure.repository.SpringDatah2PriceRepository;
+import com.rsp.akkodis.api.prices.infrastructure.repository.SpringDatah2ProductRepository;
 
 class PriceInServiceTest {
 
-	private PriceOutPort priceOutPort;
-	private BrandOutPort brandOutPort;
-	private ProductOutPort productOutPort;
-	private PriceInService priceInService;
+	@Autowired
+	private PriceService priceService;
 
-	@BeforeEach
-	void setUp() {
-		priceOutPort = mock(PriceOutPort.class);
-		brandOutPort = mock(BrandOutPort.class);
-		productOutPort = mock(ProductOutPort.class);
-		priceInService = new PriceInService(priceOutPort, brandOutPort, productOutPort);
-	}
+	@MockBean
+	private SpringDatah2BrandRepository springDatah2BrandRepository;
+
+	@MockBean
+	private SpringDatah2ProductRepository springDatah2ProductRepository;
+
+	@MockBean
+	private SpringDatah2PriceRepository springDatah2PriceRepository;
 
 	@Test
-	void shouldNotObtainPrice_whenBrandNotExist_thenTrhowException() {
+	void shouldNotObtainPrice_whenBrandNotExist_thenThrowException() {
 		var idBrand = BigInteger.TWO;
 		var idProduct = BigInteger.TWO;
 		var date = LocalDateTime.now();
 
-		when(brandOutPort.findById(idBrand)).thenReturn(Optional.empty());
+		when(springDatah2BrandRepository.findById(idBrand)).thenReturn(Optional.empty());
 
 		assertThrows(DomainException.class, () -> {
-			priceInService.obtainPrice(date, idProduct, idBrand);
+			priceService.obtainPrice(date, idProduct, idBrand);
 		});
 
 	}
 
 	@Test
-	void shouldNotObtainPrice_whenProductNotExist_thenTrhowException() {
+	void shouldNotObtainPrice_whenProductNotExist_thenThrowException() {
 		var idBrand = BigInteger.TWO;
 		var idProduct = BigInteger.TWO;
 		var date = LocalDateTime.now();
 
-		when(productOutPort.findById(idProduct)).thenReturn(Optional.empty());
+		when(springDatah2ProductRepository.findById(idProduct)).thenReturn(Optional.empty());
 
 		assertThrows(DomainException.class, () -> {
-			priceInService.obtainPrice(date, idProduct, idBrand);
+			priceService.obtainPrice(date, idProduct, idBrand);
 		});
 
 	}
@@ -73,16 +72,17 @@ class PriceInServiceTest {
 		var product = new Product(BigInteger.ONE, "Product Test");
 		var date = LocalDateTime.now();
 
-		when(brandOutPort.findById(brand.id())).thenReturn(Optional.of(brand));
-		when(productOutPort.findById(product.id())).thenReturn(Optional.of(product));
-		when(priceOutPort.findPrice(date, product, brand)).thenReturn(Optional.of(new Price(BigInteger.ONE, brand,
-				LocalDateTime.MIN, LocalDateTime.MAX, fee, product, 0, BigDecimal.TEN, "EUR")));
+		when(springDatah2BrandRepository.findById(brand.getId())).thenReturn(Optional.of(brand));
+		when(springDatah2ProductRepository.findById(product.getId())).thenReturn(Optional.of(product));
+		when(springDatah2PriceRepository.findFirstByAndSort(date, product, brand))
+				.thenReturn(Optional.of(new Price(BigInteger.ONE, brand, LocalDateTime.MIN, LocalDateTime.MAX, fee,
+						product, 0, BigDecimal.TEN, "EUR")));
 
-		var priceObtained = priceInService.obtainPrice(date, product.id(), brand.id());
+		var priceObtained = priceService.obtainPrice(date, product.getId(), brand.getId());
 
-		assertEquals(BigInteger.ONE, priceObtained.product().id());
-		assertEquals(BigInteger.ONE, priceObtained.brand().id());
-		assertEquals(LocalDateTime.MAX, priceObtained.endDate());
+		assertEquals(BigInteger.ONE, priceObtained.getProduct().getId());
+		assertEquals(BigInteger.ONE, priceObtained.getBrand().getId());
+		assertEquals(LocalDateTime.MAX, priceObtained.getEndDate());
 
 	}
 
